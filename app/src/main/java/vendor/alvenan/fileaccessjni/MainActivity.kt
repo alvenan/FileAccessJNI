@@ -42,27 +42,30 @@ class MainActivity : AppCompatActivity() {
 
             writeBtn.setOnClickListener {
                 if (checkPermission()) {
-                    textBox.text = stringFromJNI()
+                    Log.i(TAG,"Writing the message in a file "+ filePath.text.toString() +" through JNI")
+                    textBox.text = writeFile(filePath.text.toString(), message.text.toString())
                 } else {
-                    Log.i(TAG,"Acesso ao armazenamento não liberado, solicitando.")
+                    Log.i(TAG,"Storage permission was not granted, request")
                     requestPermission()
                 }
             }
 
             readBtn.setOnClickListener {
                 if (checkPermission()) {
-                    textBox.text = stringFromJNI()
+                    Log.i(TAG,"Reading the message from the file " + filePath.text.toString() + " through JNI")
+                    textBox.text = readFile(filePath.text.toString())
                 } else {
-                    Log.i(TAG,"Acesso ao armazenamento não liberado, solicitando.")
+                    Log.i(TAG,"Storage permission was not granted, request")
                     requestPermission()
                 }
             }
 
             deleteBtn.setOnClickListener {
                 if (checkPermission()) {
-                    textBox.text = stringFromJNI()
+                    Log.i(TAG,"Deleting the file " + filePath.text.toString() + " through JNI")
+                    textBox.text = removeFile(filePath.text.toString())
                 } else {
-                    Log.i(TAG,"Acesso ao armazenamento não liberado, solicitando.")
+                    Log.i(TAG,"Storage permission was not granted, request")
                     requestPermission()
                 }
             }
@@ -128,9 +131,12 @@ class MainActivity : AppCompatActivity() {
          * A native method that is implemented by the 'fileaccessjni' native library,
          * which is packaged with this application.
          */
-        external fun stringFromJNI(): String
+    external fun readFile(yourFilepath: String): String
+    external fun writeFile(yourFilepath: String, text: String): String
+    external fun removeFile(yourFilepath: String): String
 
-        companion object {
+
+    companion object {
             private const val STORAGE_PERMISSION_CODE = 100
             private const val TAG = "FileAccessApp - Java"
             // Used to load the 'fileaccessjni' library on application startup.
